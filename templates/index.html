@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Géants de la Data - Liste des Personnages</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Votre CSS personnalisé -->
+</head>
+
+<body>
+    <header class="bg-dark text-white text-center py-3">
+        <h1>Les Géants de la Data</h1>
+        <h2 class="mb-0">Liste des Personnages</h2>
+    </header>
+
+    <!-- Ajouter ceci au début ou à un endroit visible -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert alert-success" role="alert">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+
+    <div class="container mt-4">
+        <!-- Formulaire de recherche -->
+        <form class="mb-4" method="GET" action="/search">
+            <div class="form-row">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="query" placeholder="Rechercher un personnage">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Formulaire de filtrage -->
+        <form class="mb-4" method="GET" action="/filter">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="query" placeholder="Filtrer par nom">
+                </div>
+                <div class="col-md-6">
+                    <select class="form-control" name="experience_level">
+                        <option value="">Niveau d'expérience</option>
+                        <option value="Débutant">Débutant</option>
+                        <option value="Intermédiaire">Intermédiaire</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-2">Filtrer</button>
+        </form>
+
+        <!-- Liste des personnages -->
+        <div class="row">
+            {% if characters %}
+                {% for character in characters %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ character[1] }} {{ character[2] }}</h5>
+                                <p class="card-text"><strong>Téléphone:</strong> {{ character[3] }}</p>
+                                <p class="card-text"><strong>Email:</strong> {{ character[4] }}</p>
+                                <p class="card-text"><strong>Bio:</strong> {{ character[5] }}</p>
+                                <p class="card-text"><strong>Profil:</strong> {{ character[6] }}</p>
+                                <p class="card-text"><strong>Niveau d'expérience:</strong>{{ character[7] }}</p>
+                                <p class="card-text"><strong>Classe:</strong> {{ character[8] }}</p>
+                                <a href="{{ url_for('view_character', character_id=character[0]) }}" class="btn btn-primary">Voir Détails</a>
+                                <a href="{{ url_for('edit_character', character_id=character[0]) }}" class="btn btn-warning">Modifier</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                <p>Aucun personnage trouvé.</p>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('add_character') }}" class="btn btn-success mb-3">Ajouter un Personnage</a>
+
+        
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

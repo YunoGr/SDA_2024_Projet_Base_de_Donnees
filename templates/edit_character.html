@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier le Personnage</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-dark text-white text-center py-3">
+        <h1>Modifier le Personnage</h1>
+    </header>
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ url_for('edit_character', character_id=character.id) }}" method="POST">
+                    <div class="form-group">
+                        <label for="first_name">Prénom</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ character.first_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Nom</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ character.last_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">Téléphone</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ character.phone_number }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ character.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio">{{ character.bio }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile">Profil</label>
+                        <input type="text" class="form-control" id="profile" name="profile" value="{{ character.profile }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experience_level">Niveau d'expérience</label>
+                        <input type="text" class="form-control" id="experience_level" name="experience_level" value="{{ character.experience_level }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="class">Classe</label>
+                        <input type="text" class="form-control" id="class" name="class" value="{{ character.character_class }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                    <a href="/" class="btn btn-secondary ml-2">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
