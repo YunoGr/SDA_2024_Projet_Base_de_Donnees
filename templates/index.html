@@ -15,7 +15,7 @@
         <h2 class="mb-0">Liste des Personnages</h2>
     </header>
 
-    <!-- Ajouter ceci au début ou à un endroit visible -->
+    <!-- Message flash en cas de succes lors de l'ajout d'un personnage -->
     <div class="container mt-3">
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -27,6 +27,20 @@
             {% endif %}
         {% endwith %}
     </div>
+
+    <!-- Message flash en cas de succes lors de la suppression d'un personnage -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert alert-{{ category }} mt-2" role="alert">
+                    {% for category, message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    
     
 
     <div class="container mt-4">
@@ -67,24 +81,52 @@
                     <div class="col-md-4 mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">{{ character[1] }} {{ character[2] }}</h5>
-                                <p class="card-text"><strong>Téléphone:</strong> {{ character[3] }}</p>
-                                <p class="card-text"><strong>Email:</strong> {{ character[4] }}</p>
-                                <p class="card-text"><strong>Bio:</strong> {{ character[5] }}</p>
-                                <p class="card-text"><strong>Profil:</strong> {{ character[6] }}</p>
-                                <p class="card-text"><strong>Niveau d'expérience:</strong>{{ character[7] }}</p>
-                                <p class="card-text"><strong>Classe:</strong> {{ character[8] }}</p>
-                                <a href="{{ url_for('view_character', character_id=character[0]) }}" class="btn btn-primary">Voir Détails</a>
-                                <a href="{{ url_for('edit_character', character_id=character[0]) }}" class="btn btn-warning">Modifier</a>
+                                <h5 class="card-title">{{ character.first_name }} {{ character.last_name }}</h5>
+                                <p class="card-text"><strong>Téléphone:</strong> {{ character.phone_number }}</p>
+                                <p class="card-text"><strong>Email:</strong> {{ character.email }}</p>
+                                <p class="card-text"><strong>Bio:</strong> {{ character.bio }}</p>
+                                <p class="card-text"><strong>Profil:</strong> {{ character.profile }}</p>
+                                <p class="card-text"><strong>Niveau d'expérience:</strong>{{ character.experience_level }}</p>
+                                <p class="card-text"><strong>Classe:</strong> {{ character.character_class }}</p>
+                                <a href="{{ url_for('view_character', character_id=character.id) }}" class="btn btn-primary">Voir Détails</a>
+                                <a href="{{ url_for('edit_character', character_id=character.id) }}" class="btn btn-warning">Modifier</a>
+
+                                <!-- Bouton supprimer avec un attribut pour l'identifiant du personnage -->
+                                <button class="btn btn-danger" onclick="showModal({{ character.id }})">Supprimer</button>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-
             {% else %}
                 <p>Aucun personnage trouvé.</p>
             {% endif %}
         </div>
+
+
+
+        <!-- Fenêtre modale pour la confirmation de suppression -->
+<div id="deleteModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmer la suppression</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Entrez le mot de passe admin pour confirmer la suppression du personnage.</p>
+          <input type="password" id="adminPassword" class="form-control" placeholder="Mot de passe admin">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" onclick="confirmDelete()">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+        
         <a href="{{ url_for('add_character') }}" class="btn btn-success mb-3">Ajouter un Personnage</a>
 
         
@@ -92,6 +134,48 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let characterIdToDelete = null;
+      
+        // Fonction pour afficher la fenêtre modale
+        function showModal(characterId) {
+          characterIdToDelete = characterId;  // Stocker l'ID du personnage à supprimer
+          $('#deleteModal').modal('show');  // Afficher la fenêtre modale
+        }
+      
+        // Fonction pour confirmer la suppression
+        function confirmDelete() {
+          const password = document.getElementById('adminPassword').value;
+      
+          if (password === "") {
+            alert("Veuillez entrer un mot de passe.");
+            return;
+          }
+      
+          // Créer un formulaire caché pour envoyer les données au serveur
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = `/delete_character/${characterIdToDelete}`;
+          
+          // Ajouter le mot de passe au formulaire
+          const passwordInput = document.createElement('input');
+          passwordInput.type = 'hidden';
+          passwordInput.name = 'password';
+          passwordInput.value = password;
+          form.appendChild(passwordInput);
+          
+          document.body.appendChild(form);  // Ajouter le formulaire au DOM
+          form.submit();  // Soumettre le formulaire
+        }
+      </script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+      
 </body>
 
 </html>

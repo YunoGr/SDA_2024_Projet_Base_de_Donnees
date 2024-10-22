@@ -129,45 +129,13 @@ def filter_characters(conn, query, experience_level):
 
 
 
-
-
-
-
-
-
-
 # Test de connexion et création des tables
 if __name__ == "__main__":
     conn = create_connection()
     create_tables(conn)
+    add_character(conn, "John", "Doe", "+123456789", "john.doe@example.com", "Bio de John", "Développeur", "Intermédiaire", "Ingénieur logiciel")
 
 
-  # Ajouter quelques personnages
-    add_character(conn, "Pape Malick", "DIOP", "+221772390878", "papemalick.data@gmail.com", "Data Scientist passionnée.", "Developeur logiciel", "Debutant", "Scientifique des données")
-
-
-  # Ajouter un personnage
-    add_character(conn, "Alice", "Doe", "123456789", "alice.doe@example.com", "Data Scientist passionnée.", "Data Scientist", "Intermédiaire", "Scientifique des données")
-    
-    # Récupérer l'ID du personnage (exemple simple avec le premier personnage ajouté)
-    character_id = conn.execute("SELECT id FROM characters WHERE first_name = 'Alice'").fetchone()[0]
-    
-    # Ajouter des compétences pour ce personnage
-    add_skill(conn, character_id, "Python", "Expert")
-    add_skill(conn, character_id, "Machine Learning", "Avancé")
-    
-    # Ajouter des projets pour ce personnage
-    add_project(conn, character_id, "Analyse des données", "Projet sur l'analyse de données de vente")
-    add_project(conn, character_id, "Détection d'objets", "Création d'un modèle de vision par ordinateur")
-    
-    # Lister les compétences et projets pour ce personnage
-    list_skills(conn, character_id)
-    list_projects(conn, character_id)
-
-
-    # Liste de tous les personnages
-    print("Liste des personnages:")
-    list_characters(conn)
 
     # Fermeture de la connexion a la base de donnees
     conn.close()
